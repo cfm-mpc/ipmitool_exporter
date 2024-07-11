@@ -3,6 +3,7 @@ Prometheus exporter to collect the inlet temperature of the host
 using the ipmitool command 
 """
 
+import time
 from subprocess import Popen, PIPE
 
 def fetch():
@@ -29,7 +30,10 @@ def run_metrics():
     Run the metrics in a loop
     """
 
+    POLLING_INTERVAL=5
+
     while True:
         fetch()
+        time.sleep(POLLING_INTERVAL)
 
 run_metrics()
