@@ -2,8 +2,15 @@
 
 Prometheus exporter to collect the inlet temperature of the server using the `ipmitool` command.
 
-Information about the prometheus Python client can be found in:
+Information about the prometheus Python client can be found at:
 http://prometheus.github.io/client_python/
+
+# Requirements
+
+- `python 3.6` with:
+    - prometheus_client
+
+- `ipmitool`
 
 # Instructions
 
@@ -21,9 +28,9 @@ git clone git@github.com:cfm-mpc/ipmitool_exporter.git
 [root@dave ipmitool_exporter] python3 exporter.py --port 5000
 ```
 
-Optional arguments
--`--port`: The exporter's server port (default 8000)
--`--interval`: The polling interval for the metrics (default 5s)
+Optional arguments:
+- `--port`: The exporter's server port (default 8000)
+- `--interval`: The polling interval for the metrics (default 5s)
 
 4. View the metrics
 
