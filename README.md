@@ -1,18 +1,34 @@
 # Description
 
-Prometheus exporter for temperature metrics gathered with ipmitool.
+Prometheus exporter to collect the inlet temperature of the server using the `ipmitool` command.
+
+Information about the prometheus Python client can be found in:
+http://prometheus.github.io/client_python/
 
 # Instructions
 
-1. Run the exporter
+1. Clone the repository
 
 ```bash
-[root@dave ipmitool_exporter] python3 exporter.py
+git clone git@github.com:cfm-mpc/ipmitool_exporter.git
 ```
 
-2. View the metrics
+2. Copy `exporter.py` into the server you want to monitor
+
+3. Run the exporter
+
 ```bash
-[root@dave ipmitool_exporter] curl -L http://localhost:8000
+[root@dave ipmitool_exporter] python3 exporter.py --port 5000
+```
+
+Optional arguments
+-`--port`: The exporter's server port (default 8000)
+-`--interval`: The polling interval for the metrics (default 5s)
+
+4. View the metrics
+
+```bash
+[root@dave ipmitool_exporter] curl -L http://localhost:5000
 
 # HELP python_gc_objects_collected_total Objects collected during gc
 # TYPE python_gc_objects_collected_total counter
