@@ -4,6 +4,7 @@ using the ipmitool command
 """
 
 import argparse
+import re
 import time
 from subprocess import Popen, PIPE
 from prometheus_client import Gauge, start_http_server
@@ -15,18 +16,13 @@ def fetch():
 
     IPMI_TEMP_SENSOR="System Temp"
 
-    system_temp=Popen(["/usr/bin/ipmitool", "sdr", "get", IPMI_TEMP_SENSOR], stdout=PIPE)
-    sensor_reading=Popen(["/usr/bin/grep", "Sensor Reading"], stdin=system_temp.stdout, stdout=PIPE, universal_newlines=True)
-    inlet_temp=Popen(["/usr/bin/awk", "{print $4}"], stdin=sensor_reading.stdout, stdout=PIPE, universal_newlines=True)
+    sensor=Popen(["/usr/bin/ipmitool", "sdr", "get", IPMI_TEMP_SENSOR], stdout=PIPE, universal_newlines=True)
+    output,errors=sensor.communicate() # store the output and close the pipe
 
-    output,errors=inlet_temp.communicate()
+    inlet_temp=re.findall("Sensor Reading.*", output)[0].split()[3]
 
-    system_temp.kill()
-    sensor_reading.kill()
-    inlet_temp.kill()
-
-    return(output)
-
+    return(inlet_temp)
+    
 def main():
     """
     Command line arguments
