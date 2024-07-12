@@ -7,16 +7,9 @@ import time
 from subprocess import Popen, PIPE
 from prometheus_client import Gauge, start_http_server
 
-def collect():
-    """
-    Populate the metric
-    """
-
-    inlet_temperature.set(fetch())
-
 def fetch():
     """
-    Fetch the inlet temp
+    Fetch the inlet temperature running shell commands
     """
 
     IPMI_TEMP_SENSOR="System Temp"
@@ -33,17 +26,22 @@ def fetch():
 
     return(output)
 
-"""
-Start the server
-"""
+def main():
+    """
+    Start the http server and expose the metrics
+    """
 
-POLLING_INTERVAL=5
+    POLLING_INTERVAL=5
+    EXPORTER_PORT=8000
 
-start_http_server(8000)
+    start_http_server(EXPORTER_PORT)
 
-# Generate the requests
-inlet_temperature=Gauge('my_inprogress_request', 'Inlet Temperature')
+    # Generate the requests
+    inlet_temperature=Gauge('my_inprogress_request', 'Inlet Temperature')
 
-while True:
-    collect()
-    time.sleep(POLLING_INTERVAL)
+    while True:
+        inlet_temperature.set(fetch())
+        time.sleep(POLLING_INTERVAL)
+
+if __name__ == "__main__":
+    main()
