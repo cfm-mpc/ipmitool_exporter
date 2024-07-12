@@ -5,6 +5,14 @@ using the ipmitool command
 
 import time
 from subprocess import Popen, PIPE
+from prometheus_client import Gauge, start_http_server
+
+def collect():
+    """
+    Populate the metric
+    """
+
+    inlet_temperature.set(fetch())
 
 def fetch():
     """
@@ -23,17 +31,19 @@ def fetch():
     sensor_reading.kill()
     inlet_temp.kill()
 
-    print(output)
+    return(output)
 
-def run_metrics():
-    """
-    Run the metrics in a loop
-    """
+"""
+Start the server
+"""
 
-    POLLING_INTERVAL=5
+POLLING_INTERVAL=5
 
-    while True:
-        fetch()
-        time.sleep(POLLING_INTERVAL)
+start_http_server(8000)
 
-run_metrics()
+# Generate the requests
+inlet_temperature=Gauge('my_inprogress_request', 'Inlet Temperature')
+
+while True:
+    collect()
+    time.sleep(POLLING_INTERVAL)
