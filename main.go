@@ -1,0 +1,2 @@
+/* Prometheus exporter to collect the inlet temperature of the host
+using the ipmitool command */
