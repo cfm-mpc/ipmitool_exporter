@@ -4,6 +4,7 @@ using the ipmitool command */
 package main
 
 import (
+	"flag"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -63,12 +64,23 @@ func newTempCollector() *tempCollector{
 
 func main() {
 
+	// Command line arguments
+
+	var (
+		listenAddress = flag.String("address", ":8000",
+		 "Address to listen on for this exporter")
+		metricsPath = flag.String("path", "/metrics",
+		 "Path under which to expose metrics")
+		)
+	
+	flag.Parse()
+
 	// Create and register the metrics
 	inlet_temperature := newTempCollector()
 	prometheus.MustRegister(inlet_temperature)
 
 	// Expose the metrics
-	http.Handle("/metrics", promhttp.Handler())
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	http.Handle(*metricsPath, promhttp.Handler())
+	log.Fatal(http.ListenAndServe(*listenAddress, nil))
 
 }
