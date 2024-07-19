@@ -31,26 +31,44 @@ func fetch() float64 {
 
 }
 
+type tempCollector struct {
+
+	tempMetric *prometheus.Desc
+
+}
+
+func (collector *tempCollector) Describe(ch chan<- *prometheus.Desc) {
+
+	ch <- collector.tempMetric
+
+}
+
+func (collector *tempCollector) Collect(ch chan <- prometheus.Metric) {
+
+	/* Collect the metric */
+	metric := fetch()
+	
+	//Write latest value for each metric in the prometheus metric channel.
+	metric_latest := prometheus.MustNewConstMetric(collector.tempMetric, prometheus.GaugeValue, metric)
+	ch <- metric_latest
+}
+
+func newTempCollector() *tempCollector{
+
+	return &tempCollector{
+		tempMetric: prometheus.NewDesc("my_inprogress_request", "Inlet Temperature", nil, nil),
+	}
+
+}
+
 func main() {
 
 	// Create and register the metrics
-	inlet_temperature := prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "my_inprogress_request",
-		Help: "Inlet Temperature",
-	})
-
-	// Populate the metrics
+	inlet_temperature := newTempCollector()
 	prometheus.MustRegister(inlet_temperature)
-	inlet_temperature.Set(65.3)
 
 	// Expose the metrics
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8000", nil))
-	
-	// Update the metrics
-	for true {
-		prometheus.MustRegister(inlet_temperature)
-		inlet_temperature.Set(62.5)
-	}
 
 }
