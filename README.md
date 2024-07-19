@@ -33,7 +33,7 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 go_threads 9
 # HELP my_inprogress_request Inlet Temperature
 # TYPE my_inprogress_request gauge
-my_inprogress_request 0
+my_inprogress_request 65.3
 # HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
 # TYPE process_cpu_seconds_total counter
 process_cpu_seconds_total 0

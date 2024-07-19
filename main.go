@@ -38,15 +38,19 @@ func main() {
 		Name: "my_inprogress_request",
 		Help: "Inlet Temperature",
 	})
+
+	// Populate the metrics
 	prometheus.MustRegister(inlet_temperature)
+	inlet_temperature.Set(65.3)
 
 	// Expose the metrics
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":8000", nil))
 	
-	// Populate the metrics
+	// Update the metrics
 	for true {
-		inlet_temperature.Set(fetch())
+		prometheus.MustRegister(inlet_temperature)
+		inlet_temperature.Set(62.5)
 	}
 
 }
