@@ -4,42 +4,34 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 
 # Requirements
 
-- Go 
-- Prometheus client
+- A `Go` development environment
 
 # Instructions
 
-- Create module file to track dependencies for this project:
+## Clone the repository
 
 ```bash
-[root@dave ipmitool_exporter] go mod init github.com/cfm-mpc/ipmitool_exporter
+git clone git@github.com:cfm-mpc/ipmitool_exporter.git
 ```
 
-- Download the prometheus client:
+## Build the exporter
 
-```bash
-[root@dave ipmitool_exporter] go get github.com/prometheus/client_golang/prometheus
-[root@dave ipmitool_exporter] go get github.com/prometheus/client_golang/prometheus/promhttp
-```
-
-- Build the exporter.
-
-By default, the ipmisensor is "System Temp". If you need to change it, override the `sensor` variable in the Makefile with the option `-e`. E.g: 
+By default, the ipmisensor is `System Temp`. If you need to change it, override the `sensor` variable in the Makefile with the option `-e`. E.g: 
 
 ```bash
 [root@dave ipmitool_exporter] make -e sensor="Inlet Temp" 
 ```
 
-- Run the exporter:
+## Run the exporter
 
 ```bash
-./ipmitool_exporter -address=:5000 -path=/metrics
+[root@dave ipmitool_exporter] ./ipmitool_exporter -address=:5000 -path=/metrics
 ```
 
-- View the metrics:
+## View the metrics
 
 ```bash
-[root@dave ~] curl -L localhost:5000/metrics
+[root@dave ipmitool_exporter] curl -L localhost:5000/metrics
 # HELP go_threads Number of OS threads created.
 # TYPE go_threads gauge
 go_threads 7
