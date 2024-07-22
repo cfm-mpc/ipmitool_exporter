@@ -24,63 +24,70 @@ func fetch() float64 {
 	sensor := exec.Command("/usr/bin/ipmitool", "sdr", "get", iPMI_TEMP_SENSOR)
 	output,_ := sensor.Output() 
 
-	re,_ := regexp.Compile("Sensor Reading.*") // regex to match
+	// regex to match
+	re,_ := regexp.Compile("Sensor Reading.*")
 	inlet := strings.Fields(re.FindString( string(output) ))[3]
-	inlet_temp,_ := strconv.ParseFloat(inlet, 64) // convert into float
+	// convert the match into a float
+	inlet_temp,_ := strconv.ParseFloat(inlet, 64)
 	
 	return inlet_temp
-
 }
 
 type tempCollector struct {
 
-	tempMetric *prometheus.Desc
+	/* Define a structure for the collector */
 
+	tempMetric *prometheus.Desc
 }
 
 func (collector *tempCollector) Describe(ch chan<- *prometheus.Desc) {
 
-	ch <- collector.tempMetric
+	/* Implement the Describe function for the collector,
+	which essentialy writes the descriptors to the desc channel */
 
+	ch <- collector.tempMetric
 }
 
 func (collector *tempCollector) Collect(ch chan <- prometheus.Metric) {
+	
+	/* Implement the Collect function for the collector,
+	which runs the logic to determine the value of the metric */
 
-	/* Collect the metric */
+	// fetch the metric
 	metric := fetch()
 	
-	//Write latest value for each metric in the prometheus metric channel.
+	// write the latest value for the metric in the metric channel
 	metric_latest := prometheus.MustNewConstMetric(collector.tempMetric, prometheus.GaugeValue, metric)
 	ch <- metric_latest
 }
 
 func newTempCollector() *tempCollector{
 
+	/* Initialize the descriptor and return a pointer to the collector */
+
 	return &tempCollector{
 		tempMetric: prometheus.NewDesc("my_inprogress_request", "Inlet Temperature", nil, nil),
 	}
-
 }
 
 func main() {
 
-	// Command line arguments
-
+	/* Register the metric and start a httpd server to expose it */
+	
+	// command line arguments
 	var (
 		listenAddress = flag.String("address", ":8000",
 		 "Address to listen on for this exporter")
 		metricsPath = flag.String("path", "/metrics",
 		 "Path under which to expose metrics")
 		)
-	
 	flag.Parse()
 
-	// Create and register the metrics
+	// create and register the metric
 	inlet_temperature := newTempCollector()
 	prometheus.MustRegister(inlet_temperature)
 
-	// Expose the metrics
+	// expose the metric
 	http.Handle(*metricsPath, promhttp.Handler())
 	log.Fatal(http.ListenAndServe(*listenAddress, nil))
-
 }
