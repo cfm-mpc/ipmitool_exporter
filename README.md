@@ -25,6 +25,11 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 [root@dave ipmitool_exporter] go run main.go -address=:5000 -path=/metrics 
 ```
 
+By default, the ipmisensor is "System Temp". In case you want to change it, compile the program with `-ldflags`:
+```bash
+[root@dave ipmitool_exporter] go run -ldflags="-X 'main.iPMI_TEMP_SENSOR=Inlet Temp'" main.go -address=:5000 -path=/metrics
+```
+
 - View the metrics:
 ```bash
 [root@dave ~] curl -L localhost:5000/metrics

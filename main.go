@@ -15,13 +15,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var iPMI_TEMP_SENSOR string = "System Temp"
+
 func fetch() float64 {
 	
 	/* Fetch the inlet temperature running shell commands */
 
-	var IPMI_TEMP_SENSOR string = "System Temp"
-
-	sensor := exec.Command("/usr/bin/ipmitool", "sdr", "get", IPMI_TEMP_SENSOR)
+	sensor := exec.Command("/usr/bin/ipmitool", "sdr", "get", iPMI_TEMP_SENSOR)
 	output,_ := sensor.Output() 
 
 	re,_ := regexp.Compile("Sensor Reading.*") // regex to match
