@@ -77,9 +77,9 @@ func main() {
 	// command line arguments
 	var (
 		listenAddress = flag.String("address", ":8000",
-		 "Address to listen on for this exporter")
+		"Address to listen on for this exporter")
 		metricsPath = flag.String("path", "/metrics",
-		 "Path under which to expose metrics")
+		"Path under which to expose metrics")
 		)
 	flag.Parse()
 
