@@ -11,7 +11,8 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 ## Clone the repository
 
 ```bash
-git clone git@github.com:cfm-mpc/ipmitool_exporter.git
+[root@dave ~] git clone git@github.com:cfm-mpc/ipmitool_exporter.git
+[root@dave ~] cd ipmitool_exporter
 ```
 
 ## Build the exporter
@@ -35,9 +36,9 @@ By default, the ipmisensor is `System Temp`. If you need to change it, override 
 # HELP go_threads Number of OS threads created.
 # TYPE go_threads gauge
 go_threads 7
-# HELP my_inprogress_request Inlet Temperature
-# TYPE my_inprogress_request gauge
-my_inprogress_request 33
+# HELP ipmitool_temp Inlet Temperature
+# TYPE ipmitool_temp gauge
+ipmitool_temp 32
 # HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
 # TYPE process_cpu_seconds_total counter
 process_cpu_seconds_total 0

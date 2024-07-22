@@ -66,7 +66,7 @@ func newTempCollector() *tempCollector{
 	/* Initialize the descriptor and return a pointer to the collector */
 
 	return &tempCollector{
-		tempMetric: prometheus.NewDesc("my_inprogress_request", "Inlet Temperature", nil, nil),
+		tempMetric: prometheus.NewDesc("ipmitool_temp", "Inlet Temperature", nil, nil),
 	}
 }
 
