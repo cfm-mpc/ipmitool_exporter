@@ -4,7 +4,8 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 
 # Requirements
 
-- A `Go` development environment
+- A `Go` development environment to compile the program.
+- `ipmitool` in the host we want to monitor. 
 
 # Instructions
 
@@ -17,7 +18,7 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 
 ## Build the exporter
 
-By default, the ipmisensor is `System Temp`. If you need to change it, you can override the `sensor` variable in the Makefile with the option `-e`. E.g: 
+By default, the ipmisensor to read the temperature from is `System Temp`. If you need to change it, you can override the `sensor` variable in the Makefile with the option `-e`. E.g: 
 
 ```bash
 [root@dave ipmitool_exporter] make -e sensor="Inlet Temp" 
@@ -32,6 +33,8 @@ Run the binary in the host you want to monitor. You can cofigure a system servic
 ```
 
 ## View the metrics
+
+Check that the metrics are being exposed succesfully:
 
 ```bash
 [root@dave ipmitool_exporter] curl -L localhost:5000/metrics
@@ -70,5 +73,5 @@ process_max_fds 262144
       - targets: ["dave.cfm.ehu.es:5000", "oberon-ac.sn.ehu.es:5000"] # ipmitool exporter
 ```
 
-- Import the dashboard into Grafana:
+- Import the dashboard (`grafana/inlet-temperature.json`) into Grafana:
 `Dashboards`->`New`->`Import`->`Upload JSON file`
