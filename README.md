@@ -17,13 +17,15 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 
 ## Build the exporter
 
-By default, the ipmisensor is `System Temp`. If you need to change it, override the `sensor` variable in the Makefile with the option `-e`. E.g: 
+By default, the ipmisensor is `System Temp`. If you need to change it, you can override the `sensor` variable in the Makefile with the option `-e`. E.g: 
 
 ```bash
 [root@dave ipmitool_exporter] make -e sensor="Inlet Temp" 
 ```
 
 ## Run the exporter
+
+Run the binary in the host you want to monitor. You can cofigure a system service for this. 
 
 ```bash
 [root@dave ipmitool_exporter] ./ipmitool_exporter -address=:5000 -path=/metrics
@@ -46,3 +48,27 @@ process_cpu_seconds_total 0
 # TYPE process_max_fds gauge
 process_max_fds 262144
 ```
+
+# Integration with Grafana
+
+## Requirements
+
+- A `Prometheus server` (accessible through http by the `ipmitool_exporter`)
+- A `Grafana server`(accessible through http by Prometheus)
+
+## Instructions
+
+- Configure Prometheus to scrape the metrics from the host we want to monitor:
+```bash
+[irene@office:~] sudo vim /etc/prometheus/prometheus.yml
+
+(...)
+
+   - job_name: "inlet-temperature"
+     metrics_path: "/metrics"
+     static_configs:
+      - targets: ["dave.cfm.ehu.es:5000", "oberon-ac.sn.ehu.es:5000"] # ipmitool exporter
+```
+
+- Import the dashboard into Grafana:
+`Dashboards`->`New`->`Import`->`Upload JSON file`
