@@ -5,9 +5,8 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: ["master" ]
+    branches: [ "new-ci-workflow" ]
+    tags: 'v*'
 
 jobs:
   build:
@@ -31,3 +30,14 @@ jobs:
 
     - name: Build for "Inlet Temp" sensor (ekhi)
       run: go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=Inlet Temp'" -o ipmitool_exporter-ekhi ./main.go
+
+    - name: Create a release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        files: |
+          ipmitool_exporter
+          ipmitool_exporter-ekhi
