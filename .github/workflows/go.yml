@@ -1,0 +1,43 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+    tags: 'v*'
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21.11'
+
+    - name: Install dependencies
+      run: |
+        go get .
+        
+    - name: Build for "System Temp" sensor
+      run: go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=System Temp'" -o ipmitool_exporter ./main.go
+
+    - name: Build for "Inlet Temp" sensor (ekhi)
+      run: go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=Inlet Temp'" -o ipmitool_exporter-ekhi ./main.go
+
+    - name: Create a release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        files: |
+          ipmitool_exporter
+          ipmitool_exporter-ekhi
