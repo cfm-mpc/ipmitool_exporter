@@ -75,3 +75,9 @@ process_max_fds 262144
 
 - Import the dashboard (`grafana/inlet-temperature.json`) into Grafana:
 `Dashboards`->`New`->`Import`->`Upload JSON file`
+
+# Releases
+
+There are two binaries for every release:
+- `ipmitool_exporter` compiled for the "System Temp" sensor.
+- `ipmitool_exporter-ekhi` compiled for the "Inlet Temp" sensor.
