@@ -5,7 +5,7 @@ name: Go
 
 on:
   push:
-    branches: [ "new-ci-workflow" ]
+    branches: [ "master" ]
     tags: 'v*'
 
 jobs:
