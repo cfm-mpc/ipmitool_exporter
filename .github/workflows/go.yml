@@ -25,10 +25,10 @@ jobs:
         go get .
         
     - name: Build for "System Temp" sensor
-      run: env GOOS=linux GOARCH=amd64 go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=System Temp'" -o ipmitool_exporter ./main.go
+      run: env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=System Temp'" -o ipmitool_exporter ./main.go
 
     - name: Build for "Inlet Temp" sensor (ekhi)
-      run: env GOOS=linux GOARCH=amd64 go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=Inlet Temp'" -o ipmitool_exporter-ekhi ./main.go
+      run: env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-X 'main.iPMI_TEMP_SENSOR=Inlet Temp'" -o ipmitool_exporter-ekhi ./main.go
 
     - name: Create a release
       uses: softprops/action-gh-release@v2
