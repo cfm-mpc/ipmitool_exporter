@@ -15,13 +15,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-var iPMI_TEMP_SENSOR string = "System Temp"
-
-func fetch() float64 {
+func fetch(sensor_id string) float64 {
 	
 	/* Fetch the inlet temperature running shell commands */
 
-	sensor := exec.Command("/usr/bin/ipmitool", "sdr", "get", iPMI_TEMP_SENSOR)
+	sensor := exec.Command("/usr/bin/ipmitool", "sdr", "get", sensor_id)
 	output,_ := sensor.Output() 
 
 	// regex to match
@@ -37,6 +35,7 @@ type tempCollector struct {
 
 	/* Define a structure for the collector */
 
+	sensorID string
 	tempMetric *prometheus.Desc
 }
 
@@ -54,18 +53,19 @@ func (collector *tempCollector) Collect(ch chan <- prometheus.Metric) {
 	which runs the logic to determine the value of the metric */
 
 	// fetch the metric
-	metric := fetch()
+	metric := fetch(collector.sensorID)
 	
 	// write the latest value for the metric in the metric channel
 	metric_latest := prometheus.MustNewConstMetric(collector.tempMetric, prometheus.GaugeValue, metric)
 	ch <- metric_latest
 }
 
-func newTempCollector() *tempCollector{
+func newTempCollector(sensorID string) *tempCollector{
 
 	/* Initialize the descriptor and return a pointer to the collector */
 
 	return &tempCollector{
+		sensorID: sensorID,
 		tempMetric: prometheus.NewDesc("ipmitool_temp", "Inlet Temperature", nil, nil),
 	}
 }
@@ -76,6 +76,8 @@ func main() {
 	
 	// command line arguments
 	var (
+		sensorID = flag.String("sensor", "System Temp",
+		"Sensor ID to fetch the Inlet Temperature with ipmitool")
 		listenAddress = flag.String("address", ":8000",
 		"Address to listen on for this exporter")
 		metricsPath = flag.String("path", "/metrics",
@@ -84,7 +86,7 @@ func main() {
 	flag.Parse()
 
 	// create and register the metric
-	inlet_temperature := newTempCollector()
+	inlet_temperature := newTempCollector(*sensorID)
 	prometheus.MustRegister(inlet_temperature)
 
 	// expose the metric

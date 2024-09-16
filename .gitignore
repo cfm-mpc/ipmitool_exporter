@@ -1,1 +1,3 @@
+*.swp
+ipmitool_exporter
 binaries/*
