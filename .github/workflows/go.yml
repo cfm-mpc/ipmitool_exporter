@@ -9,9 +9,7 @@ on:
 
 jobs:
   build:
-  
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v4
     
@@ -25,7 +23,7 @@ jobs:
         go get .
         
     - name: Build the executable
-      run: env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ipmitool_exporter ./main.go
+      run: env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ipmitool_exporter-${{ github.ref }}-linux-amd64 ./main.go
 
     - name: Create a release
       uses: softprops/action-gh-release@v2
@@ -35,4 +33,4 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          ipmitool_exporter
+          ipmitool_exporter-${{ github.ref }}-linux-amd64
