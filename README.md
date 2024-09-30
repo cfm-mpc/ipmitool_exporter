@@ -63,7 +63,7 @@ process_max_fds 262144
 
 - Configure Prometheus to scrape the metrics from the host we want to monitor:
 ```bash
-[irene@office:~] sudo vim /etc/prometheus/prometheus.yml
+[root@prometheus ~] sudo vim /etc/prometheus/prometheus.yml
 
 (...)
 
