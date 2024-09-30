@@ -12,8 +12,8 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 ## Clone the repository
 
 ```bash
-[root@dave ~] git clone git@github.com:cfm-mpc/ipmitool_exporter.git
-[root@dave ~] cd ipmitool_exporter
+[root@localhost ~] git clone git@github.com:cfm-mpc/ipmitool_exporter.git
+[root@localhost ~] cd ipmitool_exporter
 ```
 
 ## Build the exporter
@@ -21,7 +21,7 @@ Prometheus exporter to collect the inlet temperature of the server using the `ip
 Compile the exporter: 
 
 ```bash
-[root@dave ipmitool_exporter] make 
+[root@localhost ipmitool_exporter] make 
 ```
 
 ## Run the exporter
@@ -29,7 +29,7 @@ Compile the exporter:
 Run the binary in the host you want to monitor. You can cofigure a system service for this. 
 
 ```bash
-[root@dave ipmitool_exporter] ./ipmitool_exporter -sensor "Inlet Temp" -address=":5000" -path="/metrics"
+[root@localhost ipmitool_exporter] ./ipmitool_exporter -sensor "Inlet Temp" -address=":5000" -path="/metrics"
 ```
 
 ## View the metrics
@@ -37,7 +37,7 @@ Run the binary in the host you want to monitor. You can cofigure a system servic
 Check that the metrics are being exposed succesfully:
 
 ```bash
-[root@dave ipmitool_exporter] curl -L localhost:5000/metrics
+[root@localhost ipmitool_exporter] curl -L localhost:5000/metrics
 # HELP go_threads Number of OS threads created.
 # TYPE go_threads gauge
 go_threads 7
@@ -70,7 +70,7 @@ process_max_fds 262144
    - job_name: "inlet-temperature"
      metrics_path: "/metrics"
      static_configs:
-      - targets: ["dave.cfm.ehu.es:5000", "oberon-ac.sn.ehu.es:5000"] # ipmitool exporter
+      - targets: ["localhost:5000"]
 ```
 
 - Import the dashboard (`grafana/inlet-temperature.json`) into Grafana:
